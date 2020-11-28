@@ -4,7 +4,7 @@ const app = express();
 //Connect database
 connectDB();
 
-// Init middleware
+// Init middleware. This line should help us get the request in the body in users.js
 app.use(express.json({ extended: false }));
 
 app.get('/', (req, res) => res.send('API Running'));
