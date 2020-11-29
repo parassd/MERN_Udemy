@@ -7,7 +7,7 @@ const config = require('config');
 // express-validator checks if user input is correct or not
 const { check, validationResult } = require('express-validator/check');
 
-const User = require('../../models/user');
+const User = require('../../models/UserDetails');
 // @route POST api/users
 // @desc Register User
 // @access Public
