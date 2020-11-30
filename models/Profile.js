@@ -19,6 +19,7 @@ const ProfileSchema = new mongoose.Schema({
     required: true,
   },
   skills: {
+    //   array of strings, user will input comma separated values which will be converted to JS
     type: [String],
     required: true,
   },
@@ -110,4 +111,4 @@ const ProfileSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('profile', ProfileSchema);
+module.exports = Profile = mongoose.model('profile', ProfileSchema);
