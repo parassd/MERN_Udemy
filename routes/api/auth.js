@@ -6,7 +6,7 @@ const User = require('../../models/UserDetails');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 // express-validator checks if user input is correct or not
-const { check, validationResult } = require('express-validator/check');
+const { check, validationResult } = require('express-validator');
 
 // @route GET api/auth
 // @desc Test route

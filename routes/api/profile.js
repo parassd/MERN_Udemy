@@ -70,9 +70,72 @@ router.post(
     if (skills) {
       profileFields.skills = skills.split(',').map((skill) => skill.trim());
     }
-    console.log(profileFields.skills);
-    res.send('Hello');
+    // Build social object
+    profileFields.social = {};
+    if (youtube) profileFields.social.youtube = youtube;
+    if (twitter) profileFields.social.twitter = twitter;
+    if (facebook) profileFields.social.facebook = facebook;
+    if (linkedin) profileFields.social.linkedin = linkedin;
+    if (instagram) profileFields.social.instagram = instagram;
+    try {
+      let profile = await Profile.findOne({ user: req.user.id });
+      if (profile) {
+        //Update
+        profile = await Profile.findOneAndUpdate(
+          { user: req.user.id },
+          { $set: profileFields },
+          { new: true }
+        );
+        return res.json(profile);
+      }
+
+      // Create
+      profile = new Profile(profileFields);
+      await profile.save();
+      res.json(profile);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
   }
 );
+
+// create a route to fetch all profile
+// Remember that there will be a user ID as well as a profile ID
+// @route GET api/profile
+// @desc Get all profile
+// @access Public
+router.get('/', async (req, res) => {
+  try {
+    //   populate would add name and avatar to profile under the user attribute
+    const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+    res.json(profiles);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+// Search for profile using user_id
+// @route GET api/profile/user/:user_id
+// @desc Get profile by user ID
+// @access Public
+router.get('/user/:user_id', async (req, res) => {
+  try {
+    //   populate would add name and avatar to profile under the user attribute
+    const profile = await Profile.findOne({
+      user: req.params.user_id,
+    }).populate('user', ['name', 'avatar']);
+    if (!profile)
+      return res.status(400).json({ msg: 'There is no profile for this user' });
+    res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    // Check if the error is because of incorrect user ID (if length mismatch)
+    if (err.kind == 'ObjectId') {
+      return res.status(400).json({ msg: 'There is no profile for this user' });
+    }
+    res.status(500).send('Server Error');
+  }
+});
 
 module.exports = router;
