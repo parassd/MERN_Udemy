@@ -1,6 +1,8 @@
 import React, { Fragment, useState } from 'react';
 // Since these are states that can change we also need to have an on change handler
 // useState basically defines the state
+
+// A Hook is a special function that lets you “hook into” React features. For example, useState is a Hook that lets you add React state to function components. Hooks have replaced classes to make the code more simpler and compact. useState is the state hook, formData is what we want to update and setFormData is how we update it. The parameters within useState are the initialization parameters
 const Register = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -11,10 +13,13 @@ const Register = () => {
   //   if object then we need to use curly braces {}
   // ... means spread data which is a way of copying
   // change name to the value of the input
-  //   not sure why they changed value from name to [e.target.name]. Has to do something with key values and name being used throughout the document
+  //   not sure why they changed value from name to [e.target.name]. Has to do something with key values and name being used throughout the document.
+  //   e.target.name is used so that we can change all the values, "name,email,password,password2" and not just name
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
   const { name, email, password, password2 } = formData;
+
   const onSubmit = (e) => {
     e.preventDefault();
     if (password !== password2) {
