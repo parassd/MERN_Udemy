@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from 'react';
+import axios from 'axios';
 // Since these are states that can change we also need to have an on change handler
 // useState basically defines the state
 
@@ -13,19 +14,37 @@ const Register = () => {
   //   if object then we need to use curly braces {}
   // ... means spread data which is a way of copying
   // change name to the value of the input
-  //   not sure why they changed value from name to [e.target.name]. Has to do something with key values and name being used throughout the document.
-  //   e.target.name is used so that we can change all the values, "name,email,password,password2" and not just name
+  //   e.target.name is used so that we can change all the values, "name,email,password,password2" and not just name, otherwise this function would've only changed the name attribute in formData.
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  // we want to associate inputs with these values, that's why we write value ={name}
   const { name, email, password, password2 } = formData;
 
-  const onSubmit = (e) => {
+  //   this is the advantage of using state hooks, we don't have to pass any props here we can access these fields from anywhere and they're being updated through our state hook
+  const onSubmit = async (e) => {
+    //   we need to preventDefault since it's a submit
     e.preventDefault();
     if (password !== password2) {
       console.log('Passwords do not match');
     } else {
-      console.log(formData);
+      const newUser = {
+        name,
+        email,
+        password,
+      };
+      try {
+        const config = {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        };
+        const body = JSON.stringify(newUser);
+        const res = await axios.post('/api/users', body, config);
+        console.log(res.data);
+      } catch (err) {
+        console.error(err.response.data);
+      }
     }
   };
 
