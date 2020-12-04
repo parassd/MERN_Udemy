@@ -1,10 +1,15 @@
 import React, { Fragment, useState } from 'react';
+// connect with redux for alerts
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { setAlert } from '../../actions/alert';
+import PropTypes from 'prop-types';
+
 // Since these are states that can change we also need to have an on change handler
 // useState basically defines the state
 
 // A Hook is a special function that lets you “hook into” React features. For example, useState is a Hook that lets you add React state to function components. Hooks have replaced classes to make the code more simpler and compact. useState is the state hook, formData is what we want to update and setFormData is how we update it. The parameters within useState are the initialization parameters
-const Register = () => {
+const Register = ({ setAlert }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -26,7 +31,7 @@ const Register = () => {
     //   we need to preventDefault since it's a submit
     e.preventDefault();
     if (password !== password2) {
-      console.log('Passwords do not match');
+      setAlert('Passwords do not match', 'danger');
     } else {
       console.log('Success!!!');
     }
@@ -94,4 +99,9 @@ const Register = () => {
   );
 };
 
-export default Register;
+Register.propTypes = {
+  setAlert: PropTypes.func.isRequired,
+};
+
+// connect takes state and objects in the action that you want to use
+export default connect(null, { setAlert })(Register);
